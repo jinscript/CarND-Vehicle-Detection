@@ -54,7 +54,7 @@ Here is an example using the `YUV` color space and HOG parameters of `orientatio
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and use them to train a SVM classifier. Y channel with `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` works best with 0.95 accuracy.
+I tried various combinations of parameters and use them to train a SVM classifier. Y channel (from YUV) combined with S channel (from HLS) with `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` works best with 0.98 accuracy.
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
@@ -64,7 +64,7 @@ I trained a linear SVM using HOG features. I first read in all data, extract fea
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I use three sizes (64, 96, 128 pixels) for window to scan over the middle of the image. Windows are overlapped by 50% of its area. 
+I use three sizes (64, 96, 128 pixels) for window to scan over the middle of the image. Windows are overlapped by 75% for each axis. 
 
 ![alt text][windows]
 
@@ -83,7 +83,7 @@ Here's a [link to my video result](./project_video_annotated.mp4)
 
 #### 2. Describe how (and identify where in your code) you implemented some kind of filter for false positives and some method for combining overlapping bounding boxes.
 
-I take six consecutive frames and compute its bound boxes. After that, I build a heatmap and apply thresholds on it. At last, I use `scipy.ndimage.measurements.label()` to come up with the final bound boxes.
+I take six consecutive frames and compute its bound boxes. After that, I build a summed heatmap and apply thresholds on it. At last, I use `scipy.ndimage.measurements.label()` to come up with the final bound boxes. I also use false positives of current frame to reduce false positives of summed heatmap.
 
 ![alt text][pipeline]
 ---
@@ -92,4 +92,4 @@ I take six consecutive frames and compute its bound boxes. After that, I build a
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-False positive rate is really high. Looking forward to know approaches to reduce it.
+There is still quite a few false positives. We can adopt more sophisticated methods like YOLO or SSD.
