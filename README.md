@@ -54,7 +54,7 @@ Here is an example using the `YUV` color space and HOG parameters of `orientatio
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and use them to train a SVM classifier. Y channel (from YUV) combined with S channel (from HLS) with `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` works best with 0.98 accuracy.
+I tried various combinations of parameters and use them to train a SVM classifier. YCrCb with `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)` works best with 0.99 accuracy. Other color spaces have a much higher false positive rate.
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
@@ -64,13 +64,13 @@ I trained a linear SVM using HOG features. I first read in all data, extract fea
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-I use three sizes (64, 96, 128 pixels) for window to scan over the middle of the image. Windows are overlapped by 75% for each axis. 
+I use three sizes (96, 144, 192 pixels) for window to scan over the middle of the image. Windows are overlapped by 75% for each axis. 
 
 ![alt text][windows]
 
 #### 2. Show some examples of test images to demonstrate how your pipeline is working.  What did you do to optimize the performance of your classifier?
 
-Ultimately I searched on two scales using YCrCb 3-channel HOG features plus spatially binned color and histograms of color in the feature vector, which provided a nice result.  Here are some example images:
+Ultimately I searched on two scales using YCrCb 3-channel HOG features as the feature vector, which provided a nice result. Here are some example images:
 
 ![alt text][pipeline]
 ---
@@ -92,4 +92,5 @@ I take six consecutive frames and compute its bound boxes. After that, I build a
 
 #### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-There is still quite a few false positives. We can adopt more sophisticated methods like YOLO or SSD.
+The SVM classifier will work poorly if the video is taken in a completely different environment. We need more training data and a much more sophisticated ML model, e.g. YOLO or SSD to make a robust classifier.
+
